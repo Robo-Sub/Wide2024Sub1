@@ -1,0 +1,8 @@
+prefix=/home/robosub/subcode23/install
+
+Name: motors
+Description: Description of motors
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

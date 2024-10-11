@@ -1,0 +1,6 @@
+<launch>
+	<node name="motors" pkg="main" type="i forget the name"/>
+	
+	<machine name="pi2" address="r2" env-loader="/opt/ros/noetic/env.sh" user="robosub"/>
+	<node machine="pi2" name="hydrophone" pkg="hydrophone_pkg" type="FFTanalysis.py"/>
+<launch>

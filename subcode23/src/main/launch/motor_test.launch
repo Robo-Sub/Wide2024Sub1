@@ -1,0 +1,7 @@
+<launch>
+	<node name="motors" pkg="motors" type="AUV_Control_testV2.py" output="screen"/>
+	<node name="camera" pkg="main" type="cam_process.py"/>	
+
+	<machine name="pi2" address="r2" env-loader="IMU/catkin_ws/devel/env.sh" user="robosub"/>
+	<node machine="pi2" name="depth_sensor" pkg="hydrophone_pkg" type="DepthSensorV2.py"/>
+</launch>
