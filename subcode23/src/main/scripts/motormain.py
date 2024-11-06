@@ -2,7 +2,7 @@ import rospy
 from std_msgs.msg import Int32
 import numpy as np
 from adafruit_servokit import ServoKit
-import time
+import openCV as cv2
 
 # Initialize ROS node
 rospy.init_node("color_motor_control")
@@ -26,45 +26,45 @@ class MotorControl:
         '''Set pulse range for the motors'''
         motor.set_pulse_width_range(1100, 1900)
 
-    def stop_motors():
+    def stop_motors(self):
         '''Stop all motors'''
-        for motor in thrusters:
+        for motor in self.thrusters:
             motor.throttle = 0.1
         rospy.loginfo("Motors stopped")
 
-    def move_forward():
+    def move_forward(self):
         '''Set all planar motors to forward'''
-        for motor in planar_thrusters:
+        for motor in self.planar_thrusters:
             motor.throttle = 0.5  # Adjust the throttle as needed for your setup
         rospy.loginfo("Moving forward")
 
-    def increase_vertical_thrust():
+    def increase_vertical_thrust(self):
         '''Increases vertical thruster speeds'''
         step = 0.1  # Step size for increasing speed
         left_vert.throttle = min(left_vert.throttle + step, 1.0)  # Limit to a maximum throttle of 1.0
         right_vert.throttle = min(right_vert.throttle + step, 1.0)
         rospy.loginfo(f"Increasing vertical thrust: left_vert={left_vert.throttle}, right_vert={right_vert.throttle}")
 
-    def decrease_vertical_thrust():
+    def decrease_vertical_thrust(self):
         '''Function to decrease vertical thruster speeds'''
         step = 0.1  # Step size for decreasing speed
-        left_vert.throttle = max(left_vert.throttle - step, -1.0)  # Limit to a minimum throttle of -1.0
-        right_vert.throttle = max(right_vert.throttle - step, -1.0)
-        rospy.loginfo(f"Decreasing vertical thrust: left_vert={left_vert.throttle}, right_vert={right_vert.throttle}")
+        self.left_vert.throttle = max(self.left_vert.throttle - step, -1.0)  # Limit to a minimum throttle of -1.0
+        self.right_vert.throttle = max(self.right_vert.throttle - step, -1.0)
+        rospy.loginfo(f"Decreasing vertical thrust: left_vert={self.left_vert.throttle}, right_vert={self.right_vert.throttle}")
 
-    def increase_thrust_by_10():
+    def increase_thrust_by_10(self):
         '''Function to step up motor speed by 10'''
         step = 0.1  # Step size for increasing speed
-        for motor in thrusters:
+        for motor in self.thrusters:
             motor.throttle = min(motor.throttle + step, 1.0)
-        rospy.loginfo(f"Increasing thrust by 10: {[(motor.throttle) for motor in thrusters]}")
+        rospy.loginfo(f"Increasing thrust by 10: {[(motor.throttle) for motor in self.thrusters]}")
 
-    def decrease_thrust_by_10():
+    def decrease_thrust_by_10(self):
         '''Function to step down motor speed by 10'''
         step = 0.1  # Step size for decreasing speed
-        for motor in thrusters:
+        for motor in self.thrusters:
             motor.throttle = max(motor.throttle - step, -1.0)
-        rospy.loginfo(f"Decreasing thrust by 10: {[(motor.throttle) for motor in thrusters]}")
+        rospy.loginfo(f"Decreasing thrust by 10: {[(motor.throttle) for motor in self.thrusters]}")
 
 # Color publisher
 color_pub = rospy.Publisher('camera_color', Int32, queue_size=10)
@@ -83,6 +83,7 @@ color = 0
 moving_forward = False
 
 # Call the initialization function at the start of the program
-stop_motors()
+submarine = MotorControl()
+submarine.stop_motors()
 
 
